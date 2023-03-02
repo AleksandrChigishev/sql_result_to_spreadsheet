@@ -1,3 +1,8 @@
 .idea
+__pycache__
 venv
-
+.vscode
+*.sql
+creds_ssh.json
+creds_db.json
+creds_google.json
