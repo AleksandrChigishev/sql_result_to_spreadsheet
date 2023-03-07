@@ -238,6 +238,37 @@ def make_cells_alignment_request(sheet_id, start_row_index, end_row_index, start
     }
   }
   
+
+def make_cell_borders_request(
+    sheet_id,
+    start_row_index,
+    end_row_index,
+    start_column_index,
+    end_column_index,
+    top_style='NONE',
+    bottom_style='NONE',
+    left_style='NONE',
+    right_style='NONE',
+    inner_vertical_style='NONE',
+    inner_horizontal_style='NONE'
+  ):
+    return {'updateBorders':{
+      'range': {
+        'sheetId': sheet_id,
+        'startRowIndex': start_row_index,
+        'endRowIndex': end_row_index,
+        'startColumnIndex': start_column_index,
+        'endColumnIndex': end_column_index
+        }, 
+      'top': {'style': top_style},
+      'bottom': {'style': bottom_style},
+      'left': {'style': left_style},
+      'right': {'style': right_style},
+      'innerHorizontal': {'style': inner_horizontal_style},
+      'innerVertical': {'style': inner_vertical_style}
+      }
+    }
+  
   
 def make_text_format_request(sheet_id, start_row_index, end_row_index, start_column_index, end_column_index, size, bold=False, italic=False, strikethrough=False, underline=False):
   return {'repeatCell':{
