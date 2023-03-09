@@ -21,22 +21,16 @@ def read_json(filepath):
         return json.load(file)
     
     
-creds_ssh = read_json(path.join(BASE_DIR, 'creds_ssh.json'))
-creds_db = read_json(path.join(BASE_DIR, 'creds_db.json'))
+creds_db = db.SQL_credentials(**read_json(path.join(BASE_DIR, 'creds_db.json')))
 
-ssh_host = creds_ssh['ssh_host']
-ssh_user = creds_ssh['ssh_user']
-ssh_port = creds_ssh['ssh_port']
-pkey_file_path = creds_ssh['pkey_file_path']
+try:
+    creds_ssh = db.SSH_credentials(**read_json(path.join(BASE_DIR, 'creds_ssh.json'))) 
+    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.sql_hostname, remote_port=creds_db.sql_port)
+except:
+    creds_ssh = db.SSH_credentials(**read_json(path.join(BASE_DIR, 'creds_ssh_personal_acc.json')))
+    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.sql_hostname, remote_port=creds_db.sql_port)
 
-sql_username = creds_db['sql_username']
-sql_hostname = creds_db['sql_hostname']
-sql_password = creds_db['sql_password']
-sql_main_database = creds_db['sql_main_database']
-sql_port = creds_db['sql_port']
-
-server_tunnel = db.generate_ssh_tunnel(ssh_host, ssh_port, ssh_user, pkey_file_path, sql_hostname, sql_port)
-db_connection = db.generate_db_connection(sql_username, sql_password, sql_main_database, server_tunnel)
+db_connection = db.generate_db_connection(creds_db, ssh_tunnel=server_tunnel)
 
 credentials_google = Credentials.from_service_account_file(filename=path.join(BASE_DIR, 'creds_google.json'), scopes=g_api.SCOPES)
 spreadsheet = g_api.create_spreadsheet_instance(credentials_google)
