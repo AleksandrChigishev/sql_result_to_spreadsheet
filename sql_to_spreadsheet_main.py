@@ -21,14 +21,18 @@ def read_json(filepath):
         return json.load(file)
     
     
-creds_db = db.SQL_credentials(**read_json(path.join(BASE_DIR, 'creds_db.json')))
+path_db_creds = path.join(BASE_DIR, 'creds_db.json')
+path_ssh_creds = path.join(BASE_DIR, 'creds_ssh.json')
+ 
+creds_db = db.SQL_credentials(**read_json(path_db_creds))
 
 try:
-    creds_ssh = db.SSH_credentials(**read_json(path.join(BASE_DIR, 'creds_ssh.json'))) 
-    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.sql_hostname, remote_port=creds_db.sql_port)
+    creds_ssh = db.SSH_credentials(**read_json(path_ssh_creds)) 
+    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.hostname, remote_port=creds_db.port)
 except:
-    creds_ssh = db.SSH_credentials(**read_json(path.join(BASE_DIR, 'creds_ssh_personal_acc.json')))
-    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.sql_hostname, remote_port=creds_db.sql_port)
+    path_ssh_creds = path.join(BASE_DIR, 'creds_ssh_personal_acc.json')
+    creds_ssh = db.SSH_credentials(**read_json(path_ssh_creds))
+    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.hostname, remote_port=creds_db.port)
 
 db_connection = db.generate_db_connection(creds_db, ssh_tunnel=server_tunnel)
 
