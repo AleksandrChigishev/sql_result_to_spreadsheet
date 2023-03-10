@@ -1,1 +1,1 @@
-{"ssh_host": "host", "ssh_user": "user", "ssh_port": 0, "pkey_file_path": "path"}
+{"host": "host", "user": "user", "port": 0, "private_key_file_path": "path"}
