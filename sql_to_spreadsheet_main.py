@@ -4,7 +4,6 @@ import google_api as g_api
 from google.oauth2.service_account import Credentials
 
 from os import path, scandir
-import json
 import pandas as pd
 import webbrowser
 
@@ -15,26 +14,9 @@ BASE_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/'
 TEST_SPREADSHEET_ID = '1gj95USnjx5vcdECsJSt6L67LSFzm11Is1EgNOYtMqTY'
 TEST_SHEET_ID = 590384370
 
-
-def read_json(filepath):
-    with open(file=filepath, mode='r') as file:
-        return json.load(file)
-    
-    
 path_db_creds = path.join(BASE_DIR, 'creds_db.json')
 path_ssh_creds = path.join(BASE_DIR, 'creds_ssh.json')
- 
-creds_db = db.SQL_credentials(**read_json(path_db_creds))
-
-try:
-    creds_ssh = db.SSH_credentials(**read_json(path_ssh_creds)) 
-    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.hostname, remote_port=creds_db.port)
-except:
-    path_ssh_creds = path.join(BASE_DIR, 'creds_ssh_personal_acc.json')
-    creds_ssh = db.SSH_credentials(**read_json(path_ssh_creds))
-    server_tunnel = db.generate_ssh_tunnel(creds_ssh, remote_host=creds_db.hostname, remote_port=creds_db.port)
-
-db_connection = db.generate_db_connection(creds_db, ssh_tunnel=server_tunnel)
+db_connection, ssh_tunnel = db.create_ssh_database_connection(path_db_creds, path_ssh_creds)
 
 credentials_google = Credentials.from_service_account_file(filename=path.join(BASE_DIR, 'creds_google.json'), scopes=g_api.SCOPES)
 spreadsheet = g_api.create_spreadsheet_instance(credentials_google)
@@ -68,5 +50,5 @@ with scandir(SQL_DIR) as entries:
             webbrowser.open(BASE_SPREADSHEET_URL + file_id_for_result)
 
 g_api.show_all_files(drive)
-server_tunnel.stop()
+ssh_tunnel.stop()
 print('Done!')
