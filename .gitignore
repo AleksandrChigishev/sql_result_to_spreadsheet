@@ -4,5 +4,8 @@ venv
 .vscode
 *.sql
 creds_ssh.json
+creds_ssh_personal_acc.json
 creds_db.json
 creds_google.json
+creds_db_purchase.json
+notebook_template.ipynb
