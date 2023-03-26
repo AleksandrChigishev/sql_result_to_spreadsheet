@@ -113,7 +113,6 @@ def clear_values(spreadsheet_instance, spreadsheet_id, range):
   return spreadsheet_instance.values().clear(spreadsheetId=spreadsheet_id, range=range).execute()
 
 
-
 """Functions for creating requesets for batch updating spreadsheet"""
 
 def make_create_sheet_request(title, rows, columns):
