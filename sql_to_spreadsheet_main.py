@@ -11,10 +11,8 @@ BASE_DIR = path.dirname(path.abspath(__file__))
 SQL_DIR = path.join(BASE_DIR, 'sql_queries')
 
 BASE_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/'
-TEST_SPREADSHEET_ID = '1gj95USnjx5vcdECsJSt6L67LSFzm11Is1EgNOYtMqTY'
-TEST_SHEET_ID = 590384370
 
-path_db_creds = path.join(BASE_DIR, 'creds_db.json')
+path_db_creds = path.join(BASE_DIR, 'creds_db_purchase.json')
 path_ssh_creds = path.join(BASE_DIR, 'creds_ssh.json')
 db_connection, ssh_tunnel = db.create_ssh_database_connection(path_db_creds, path_ssh_creds)
 
